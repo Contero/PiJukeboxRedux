@@ -18,7 +18,7 @@ public class ArtistButton extends Button
 		super((artist == null) ? "" : artist.toString());
 
 		this.artist = artist;
-		this.setPrefWidth(250);
+		this.setPrefSize(250,25);
 
 		if (artist != null)
 		{
@@ -37,7 +37,6 @@ public class ArtistButton extends Button
 					});
 					JukeboxPi.backButton.setVisible(true);
 				} catch (SQLException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}	
 			});

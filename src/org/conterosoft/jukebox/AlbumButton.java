@@ -15,12 +15,10 @@ public class AlbumButton extends Button
 		super(album.toString());
 
 		this.album = album;
-		//this.setMinWidth(250);
-		this.setPrefWidth(250);
+		this.setPrefSize(250,20);
 
 		if (album != null)
 		{
-
 			this.setOnAction(event -> {
 				List<SongButton> songs = new ArrayList<SongButton>();
 				try 
@@ -60,6 +58,5 @@ public class AlbumButton extends Button
 				}
 			});
 		}
-
 	}
 }

@@ -1,8 +1,6 @@
 package org.conterosoft.jukebox;
 
 import java.util.List;
-
-
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.image.Image;
@@ -16,7 +14,7 @@ import javafx.scene.layout.Region;
 public class DisplayGrid extends VBox
 {
 	private static GridPane gridpane = new GridPane();
-	private static Image arrow = new Image("file:stuff/arrow.png"); 
+	private static Image arrow = new Image(JukeboxPi.class.getResource("resources/arrow.png").toExternalForm()); 
 	private static ImageView leftArrow = new ImageView(arrow),
 			rightArrow = new ImageView(arrow);
 	private static Region spring = new Region();
@@ -28,8 +26,8 @@ public class DisplayGrid extends VBox
 	private int rows = 12,
 				cols;
 	
-	private List<Btn> buttons;
-	public <T extends Button> List<Btn> getButtons() { return buttons; }
+	private List<Button> buttons;
+	public <T extends Button> List<Button> getButtons() { return buttons; }
 	
 	public void setRows(double rows)
 	{
@@ -55,8 +53,9 @@ public class DisplayGrid extends VBox
 	
 	public <T> void fill(List<T> buttons, int pageIndex)
 	{
-		this.buttons =  (List<Btn>) buttons;
+		this.buttons =  (List<Button>) buttons;
 		int size = buttons.size();
+		
 		int perPage = rows * cols;
 		
 		int start = pageIndex * perPage;

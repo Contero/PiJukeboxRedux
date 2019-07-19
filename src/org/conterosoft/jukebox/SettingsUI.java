@@ -144,7 +144,7 @@ public class SettingsUI extends Stage
 		});
 
 		Scene scene = new Scene(vbox);
-		scene.getStylesheets().add("file:stuff/jukebox.css");
+		scene.getStylesheets().add(JukeboxPi.class.getResource("resources/jukebox.css").toExternalForm());
 		vbox.getStyleClass().add("settingsLayout");
 		
 		vbox.setPadding(new Insets(10));

@@ -1,7 +1,6 @@
 package org.conterosoft.jukebox;
 
 import javafx.scene.control.Button;
-import javafx.scene.paint.Color;
 
 public class SongButton extends Button 
 {

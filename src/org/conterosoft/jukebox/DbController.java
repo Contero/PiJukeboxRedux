@@ -19,8 +19,8 @@ public class DbController
 	private int artistCount,
 				albumCount,
 				songCount;
-	Artist artist;
-	Album album;
+	private Artist artist;
+	private Album album;
 	private List<Artist> artists = new ArrayList<Artist>();
 	
 	private String lastArtist = "",
@@ -38,7 +38,7 @@ public class DbController
 	 */
 	public DbController() throws SQLException
 	{
-		final String dbfile = "jdbc:sqlite:stuff/juke.db";
+		final String dbfile = "jdbc:sqlite:juke.db";
 		DriverManager.registerDriver(new JDBC());
 		db = DriverManager.getConnection(dbfile);
 		

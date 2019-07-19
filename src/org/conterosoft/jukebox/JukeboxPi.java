@@ -22,7 +22,6 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.effect.DropShadow;
 
-
 public class JukeboxPi extends Application 
 {
 
@@ -37,20 +36,21 @@ public class JukeboxPi extends Application
 	static HBox lists;
 	static Button backButton,
 					addAll;
-
+	final double BUTTON_WIDTH = 250,
+			BUTTON_HEIGHT = 31;
+	
 	public static void main(String[] args) 
 	{
-		// TODO Auto-generated method stub
 		launch(args);
 	}
 
 	@Override
 	public void start(Stage mainStage) throws Exception {
-		// TODO Auto-generated method stub
-		final String MENU_IMAGE = "file:stuff/note.png",
-				FONT_FILE = "file:stuff.aqua.ttf",
-				BACK_ARROW_IMAGE = "file:stuff/backArrow.png",
-				PLUS_IMAGE = "file:stuff/plus.jpg";
+	
+		final String MENU_IMAGE = JukeboxPi.class.getResource("resources/note.png").toExternalForm(),
+				FONT_FILE = JukeboxPi.class.getResource("resources/aqua.ttf").toExternalForm(),
+				BACK_ARROW_IMAGE = JukeboxPi.class.getResource("resources/backArrow.png").toExternalForm(),
+				PLUS_IMAGE = JukeboxPi.class.getResource("resources/plus.jpg").toExternalForm();
 
 		//connect to database
 		try 
@@ -140,25 +140,25 @@ public class JukeboxPi extends Application
 			public void handle(WindowEvent arg0) 
 			{
 
-				int fill = 125;
+				int fill = 145;
 				double screenX = mainStage.getWidth(),
 						screenY = mainStage.getHeight(),
 						padX,
 						padY,
-						rows = (screenY - fill) / 25.6,
-						cols = (screenX / 255);
+						rows = (screenY - fill) / BUTTON_HEIGHT,
+						cols = (screenX / (BUTTON_WIDTH + 5));
 
-				padY = (screenY - ((int)(rows) * 25.6 + fill))/2; 
-				padX = (screenX - (int)(cols) * 250)/2;
+				padY = (screenY - ((int)(rows) * BUTTON_HEIGHT + fill))/2; 
+				padX = (screenX - (int)(cols) * BUTTON_WIDTH)/2;
 
 				vbox.setPadding(new Insets(padY, padX, padY, padX));
 
-				playListView.setPrefHeight(rows * 25.6);
+				playListView.setPrefHeight(rows * BUTTON_HEIGHT);
 
 				gridpane.setRows(rows);
 
 				if (settingsObj.getShowPlaylist()) 
-				{ cols = cols - 1; }
+				{ cols--; }
 				gridpane.setCols(cols);
 				gridpane.refill();
 			}
@@ -166,34 +166,33 @@ public class JukeboxPi extends Application
 
 		ChangeListener<Number> stageSizeListener = (observable, oldValue, newValue) ->
 		{
-			int fill = 125;
+			int fill = 145;
 			double screenX = mainStage.getWidth(),
 					screenY = mainStage.getHeight(),
 					padX,
 					padY,
-					rows = (screenY - fill) / 25.6,
-					cols = (screenX / 255);
+					rows = (screenY - fill) / (BUTTON_HEIGHT),
+					cols = (screenX / (BUTTON_WIDTH + 5));
 
-			padY = (screenY - ((int)(rows) * 25.6 + fill))/2; 
-			padX = (screenX - (int)(cols) * 250)/2;
+			padY = (screenY - ((int)(rows) * BUTTON_HEIGHT + fill))/2; 
+			padX = (screenX - (int)(cols) * BUTTON_WIDTH)/2;
 			vbox.setPadding(new Insets(padY, padX, padY, padX));
 
-			playListView.setPrefHeight(rows * 25.6);
+			playListView.setPrefHeight(rows * BUTTON_HEIGHT);
 
 			gridpane.setRows(rows);
 
 			if (settingsObj.getShowPlaylist()) 
-			{ cols = cols - 1; }
+			{ cols--; }
 			gridpane.setCols(cols);
 			gridpane.refill();
-
 		};
 
 		mainStage.widthProperty().addListener(stageSizeListener);
 		mainStage.heightProperty().addListener(stageSizeListener); 
 		adminStage.addEventHandler(WindowEvent.WINDOW_HIDDEN, new resize());
 
-		scene.getStylesheets().add("file:stuff/jukebox.css"); 
+		scene.getStylesheets().add(JukeboxPi.class.getResource("resources/jukebox.css").toExternalForm()); 
 		mainStage.setMinHeight(200);
 		mainStage.setMinWidth(400);
 		mainStage.setFullScreen(true);
