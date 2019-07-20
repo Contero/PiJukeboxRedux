@@ -31,7 +31,7 @@ public class JukeboxPi extends Application
 	static Playlist playlist = new Playlist();
 	static ListView<Song> playListView = new ListView<Song>();
 	static Player player = new Player();
-	static List<AlbumButton> albums;
+	static List<ButtonBase> albums;
 	static DisplayGrid gridpane = new DisplayGrid();
 	static HBox lists;
 	static Button backButton,
@@ -104,12 +104,12 @@ public class JukeboxPi extends Application
 		});
 
 		addAll.setOnAction(event ->{
-			List<?> l = gridpane.getButtons();
+			List<ButtonBase> l = gridpane.getButtons();
 
-			for (SongButton b: (List<SongButton>)l)
+			for (ButtonBase b: l)
 			{
-				JukeboxPi.playListView.getItems().add(b.getSong());
-				JukeboxPi.playlist.add(b.getSong());
+				JukeboxPi.playListView.getItems().add(b.getObject());
+				JukeboxPi.playlist.add(b.getObject());
 			}
 		});
 
@@ -202,7 +202,7 @@ public class JukeboxPi extends Application
 	{
 		try
 		{			
-			List<ArtistButton> artistButtonList = new ArrayList<ArtistButton>();
+			List<ButtonBase> artistButtonList = new ArrayList<ButtonBase>();
 
 			db.getArtists().stream().forEach(a -> {
 				artistButtonList.add(new ArtistButton(a));

@@ -26,8 +26,8 @@ public class DisplayGrid extends VBox
 	private int rows = 12,
 				cols;
 	
-	private List<Button> buttons;
-	public <T extends Button> List<Button> getButtons() { return buttons; }
+	private List<ButtonBase> buttons;
+	public List<ButtonBase> getButtons() { return buttons; }
 	
 	public void setRows(double rows)
 	{
@@ -51,9 +51,9 @@ public class DisplayGrid extends VBox
 		fill(buttons, 0);
 	}
 	
-	public <T> void fill(List<T> buttons, int pageIndex)
+	public void fill(List<ButtonBase> buttons, int pageIndex)
 	{
-		this.buttons =  (List<Button>) buttons;
+		this.buttons =  (List<ButtonBase>) buttons;
 		int size = buttons.size();
 		
 		int perPage = rows * cols;

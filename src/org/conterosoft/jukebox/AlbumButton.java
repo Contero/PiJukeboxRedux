@@ -1,14 +1,14 @@
 package org.conterosoft.jukebox;
 
-import javafx.scene.control.Button;
 import java.util.List;
 import java.util.ArrayList;
 
-public class AlbumButton extends Button 
+public class AlbumButton extends ButtonBase
 {
 	private Album album;
-
-	public Album getAlbum() { return album; }
+	
+	@Override
+	public Album getObject() { return album; }
 
 	public AlbumButton(Album album)
 	{
@@ -20,7 +20,7 @@ public class AlbumButton extends Button
 		if (album != null)
 		{
 			this.setOnAction(event -> {
-				List<SongButton> songs = new ArrayList<SongButton>();
+				List<ButtonBase> songs = new ArrayList<ButtonBase>();
 				try 
 				{
 					JukeboxPi.db.getSongs(this.album.getAlbumId()).stream().forEach(song -> { 

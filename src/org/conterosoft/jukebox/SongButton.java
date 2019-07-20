@@ -1,12 +1,11 @@
 package org.conterosoft.jukebox;
 
-import javafx.scene.control.Button;
-
-public class SongButton extends Button 
+public class SongButton extends ButtonBase 
 {
 	private Song song;
 	
-	public Song getSong() 
+	@Override
+	public Song getObject() 
 	{ 
 		return song; 
 	}

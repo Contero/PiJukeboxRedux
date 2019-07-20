@@ -4,14 +4,13 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import javafx.scene.control.Button;
-
-public class ArtistButton extends Button 
+public class ArtistButton extends ButtonBase 
 {
 
 	private Artist artist;
-
-	public Artist getArtist() { return artist; }
+	
+	@Override
+	public Artist getObject() { return artist; }
 
 	public ArtistButton(Artist artist)
 	{
@@ -24,7 +23,7 @@ public class ArtistButton extends Button
 		{
 			this.setOnAction(event -> {
 				try {
-					List<AlbumButton> albums = new ArrayList<AlbumButton>();
+					List<ButtonBase> albums = new ArrayList<ButtonBase>();
 
 					JukeboxPi.db.getAlbums(this.artist.getArtistId()).stream().forEach(a -> albums.add(new AlbumButton(a)));
 
