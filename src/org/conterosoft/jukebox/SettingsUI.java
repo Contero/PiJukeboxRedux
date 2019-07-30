@@ -22,6 +22,8 @@ public class SettingsUI extends Stage
 {
 	boolean dirty = false;
 	private Label message = new Label();
+	@SuppressWarnings("unused")
+	private JukeboxPi app;
 	
 	public void setMessage(int artists, int albums, int songs) {
 		Platform.runLater(new Runnable() {
@@ -36,21 +38,21 @@ public class SettingsUI extends Stage
 	}
 	
 	
-	public SettingsUI()
+	public SettingsUI(JukeboxPi app)
 	{ 		
 		Label rootLabel = new Label("Music root folder:");
-		
-		TextField root = new TextField(JukeboxPi.settingsObj.getRoot());
+		this.app = app;
+		TextField root = new TextField(app.settingsObj.getRoot());
 		Button browse = new Button("Browse"),
 				close = new Button("Close Settings"),
 				exit = new Button("Exit Program"),
 				powerOff = new Button("Power off Pi");
 		HBox rootHbox = new HBox(10,rootLabel,root,browse);
 		CheckBox showPlaylist = new CheckBox("Show Playlist");
-		showPlaylist.setSelected(JukeboxPi.settingsObj.getShowPlaylist());
+		showPlaylist.setSelected(app.settingsObj.getShowPlaylist());
 
 		showPlaylist.setOnAction(event -> {
-			JukeboxPi.settingsObj.setShowPlaylist(showPlaylist.isSelected());
+			app.settingsObj.setShowPlaylist(showPlaylist.isSelected());
 		});
 
 		root.textProperty().addListener((obs,old,newt) ->{ dirty = true; });
@@ -99,11 +101,11 @@ public class SettingsUI extends Stage
 		scan.setOnAction(event -> { 
 			if (dirty)
 			{
-				JukeboxPi.settingsObj.setRoot(root.getText());
+				app.settingsObj.setRoot(root.getText());
 				dirty = false;
 			}
 
-			if (!JukeboxPi.settingsObj.getHasRoot())
+			if (!app.settingsObj.getHasRoot())
 			{
 				Alert alert = new Alert(AlertType.INFORMATION);
 				alert.setContentText("Need root directory, bro");
@@ -116,16 +118,16 @@ public class SettingsUI extends Stage
 						
 						try 
 						{
-							JukeboxPi.db.libraryScan();
+							app.db.libraryScan();
 						} 
 						catch (Exception e) 
 						{
 							e.printStackTrace();
 						}
 						Platform.runLater(() -> {
-						message.setText("Complete!\nArtists: " + JukeboxPi.db.getArtistCount() +
-								"\nAlbums: " + JukeboxPi.db.getAlbumCount() + 
-								"\nSongs: " + JukeboxPi.db.getSongCount());
+						message.setText("Complete!\nArtists: " + app.db.getArtistCount() +
+								"\nAlbums: " + app.db.getAlbumCount() + 
+								"\nSongs: " + app.db.getSongCount());
 						});
 				});
 						
@@ -152,7 +154,7 @@ public class SettingsUI extends Stage
 		this.setScene(scene);
 		this.initModality(Modality.APPLICATION_MODAL);
 		this.setOnCloseRequest(event -> {
-			if (dirty) { JukeboxPi.settingsObj.setRoot(root.getText()); }
+			if (dirty) { app.settingsObj.setRoot(root.getText()); }
 		});
 		this.initStyle(StageStyle.UNDECORATED);
 		

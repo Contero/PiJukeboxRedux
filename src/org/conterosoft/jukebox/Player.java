@@ -10,11 +10,13 @@ public class Player
 	private File file;
 	private boolean isPlaying = false,
 					isFlac;
+	private JukeboxPi app;
 	
-	public void start()
+	public void start(JukeboxPi app)
 	{
-		song = JukeboxPi.playlist.getNext();
-		JukeboxPi.playListView.getItems().remove(0);
+		this.app = app;
+		song = app.playlist.getNext();
+		app.playListView.getItems().remove(0);
 		isPlaying = true;
 		play(song);
 	}
@@ -39,10 +41,10 @@ public class Player
 					}
 					
 					Platform.runLater(() -> {
-						if (!JukeboxPi.playlist.getIsEmpty())
+						if (!app.playlist.getIsEmpty())
 						{
-							JukeboxPi.playListView.getItems().remove(0);
-							play(JukeboxPi.playlist.getNext());
+							app.playListView.getItems().remove(0);
+							play(app.playlist.getNext());
 						}
 						else
 						{

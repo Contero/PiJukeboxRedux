@@ -7,18 +7,21 @@ public class Playlist
 {
 	private Queue<Song> playlist =  new LinkedList<Song>();
 	private boolean empty;
+	@SuppressWarnings("unused")
+	private JukeboxPi app;
 	
 	public Playlist()
 	{
 		empty = true;
 	}
 	
-	public void add(Song song)
+	public void add(JukeboxPi app, Song song)
 	{
 		playlist.add(song); 
-		if (empty && !JukeboxPi.player.getIsPlaying()) 
+		this.app = app;
+		if (empty && !app.player.getIsPlaying()) 
 		{ 
-			JukeboxPi.player.start();
+			app.player.start(app);
 		}
 		else if (empty)
 		{

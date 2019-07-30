@@ -27,6 +27,7 @@ public class DbController
 					lastAlbum = "";
 	private int lastArtistId = 0,
 				lastAlbumId = 0;
+	private JukeboxPi app;
 
 	
 	public int getArtistCount() { return artistCount; }
@@ -36,11 +37,12 @@ public class DbController
 	 * Constructor: creates database connection and creates tables if the do not exist
 	 * @throws SQLException
 	 */
-	public DbController() throws SQLException
+	public DbController(JukeboxPi app) throws SQLException
 	{
 		final String dbfile = "jdbc:sqlite:juke.db";
 		DriverManager.registerDriver(new JDBC());
 		db = DriverManager.getConnection(dbfile);
+		this.app = app;
 		
 		DatabaseMetaData md = db.getMetaData();
 		ResultSet rs = md.getTables(null, null, "artists", null);
@@ -133,10 +135,10 @@ public class DbController
 		artistCount = albumCount = songCount = 0;
 		
 		//Do I have a settings
-		if(JukeboxPi.settingsObj.getHasRoot())
+		if(app.settingsObj.getHasRoot())
 		{
 			makeTables();
-			folderscan(new File(JukeboxPi.settingsObj.getRoot()));
+			folderscan(new File(app.settingsObj.getRoot()));
 		}
 		else
 		{
@@ -266,7 +268,7 @@ public class DbController
 				insertSong.execute();
 				songCount++;
 				
-				JukeboxPi.adminStage.setMessage(artistCount, albumCount, songCount);
+				app.adminStage.setMessage(artistCount, albumCount, songCount);
 			}
 		}
 		catch (Exception e)

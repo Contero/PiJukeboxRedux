@@ -3,6 +3,7 @@ package org.conterosoft.jukebox;
 public class SongButton extends ButtonBase 
 {
 	private Song song;
+	private JukeboxPi app;
 	
 	@Override
 	public Song getObject() 
@@ -10,14 +11,15 @@ public class SongButton extends ButtonBase
 		return song; 
 	}
 	
-	public SongButton(Song song)
+	public SongButton(JukeboxPi app, Song song)
 	{
 		super(song.toString());
 		this.song = song;
 		this.setPrefWidth(250);
+		this.app = app;
 		this.setOnAction(event -> {
-			JukeboxPi.playListView.getItems().add(song);
-			JukeboxPi.playlist.add(song);
+			app.playListView.getItems().add(song);
+			app.playlist.add(app, song);
 		});
 		
 		this.setOnTouchPressed(event -> {

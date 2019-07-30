@@ -25,20 +25,20 @@ import javafx.scene.effect.DropShadow;
 public class JukeboxPi extends Application 
 {
 
-	static DbController db;
-	static Settings settingsObj = new Settings();
-	static SettingsUI adminStage;
-	static Playlist playlist = new Playlist();
-	static ListView<Song> playListView = new ListView<Song>();
-	static Player player = new Player();
-	static List<ButtonBase> albums;
-	static DisplayGrid gridpane = new DisplayGrid();
-	static HBox lists;
-	static Button backButton,
+	DbController db;
+	Settings settingsObj = new Settings();
+	SettingsUI adminStage;
+	Playlist playlist = new Playlist();
+	ListView<Song> playListView = new ListView<Song>();
+	Player player = new Player();
+	List<ButtonBase> albums;
+	DisplayGrid gridpane = new DisplayGrid(this);
+	HBox lists;
+	Button backButton,
 					addAll;
 	final double BUTTON_WIDTH = 250,
 			BUTTON_HEIGHT = 31;
-	
+
 	public static void main(String[] args) 
 	{
 		launch(args);
@@ -55,7 +55,7 @@ public class JukeboxPi extends Application
 		//connect to database
 		try 
 		{
-			db = new DbController();
+			db = new DbController(this);
 		}
 		catch (Exception e)
 		{
@@ -81,7 +81,7 @@ public class JukeboxPi extends Application
 		addAll.setGraphic(plusIcon);
 
 		Region filler = new Region();
-		adminStage = new SettingsUI();
+		adminStage = new SettingsUI(this);
 
 		ImageView note = new ImageView(new Image(MENU_IMAGE));
 		note.setFitWidth(25);
@@ -94,7 +94,7 @@ public class JukeboxPi extends Application
 
 		menuBtn.setOnAction(event -> {
 			adminStage.showAndWait();
-			JukeboxPi.makeLists();
+			this.makeLists();
 
 			refreshArtists();
 
@@ -108,8 +108,8 @@ public class JukeboxPi extends Application
 
 			for (ButtonBase b: l)
 			{
-				JukeboxPi.playListView.getItems().add(b.getObject());
-				JukeboxPi.playlist.add(b.getObject());
+				playListView.getItems().add(b.getObject());
+				playlist.add(this, b.getObject());
 			}
 		});
 
@@ -198,14 +198,14 @@ public class JukeboxPi extends Application
 		mainStage.setFullScreen(true);
 		mainStage.show();
 	}
-	public static void refreshArtists()
+	public void refreshArtists()
 	{
 		try
 		{			
 			List<ButtonBase> artistButtonList = new ArrayList<ButtonBase>();
 
 			db.getArtists().stream().forEach(a -> {
-				artistButtonList.add(new ArtistButton(a));
+				artistButtonList.add(new ArtistButton(this, a));
 			});
 			gridpane.fill(artistButtonList,0);
 
@@ -215,8 +215,26 @@ public class JukeboxPi extends Application
 			e.printStackTrace();
 		}
 	}
+	
+	public void refreshArtists(int page)
+	{
+		try
+		{			
+			List<ButtonBase> artistButtonList = new ArrayList<ButtonBase>();
 
-	public static void makeLists()
+			this.db.getArtists().stream().forEach(a -> {
+				artistButtonList.add(new ArtistButton(this, a));
+			});
+			gridpane.fill(artistButtonList,page);
+
+		}
+		catch (Exception e)
+		{
+			e.printStackTrace();
+		}
+	}
+
+	public void makeLists()
 	{
 		if (settingsObj.getShowPlaylist() && !lists.getChildren().contains(playListView))
 		{	

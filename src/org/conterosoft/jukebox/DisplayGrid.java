@@ -13,18 +13,27 @@ import javafx.scene.layout.Region;
 
 public class DisplayGrid extends VBox
 {
-	private static GridPane gridpane = new GridPane();
-	private static Image arrow = new Image(JukeboxPi.class.getResource("resources/arrow.png").toExternalForm()); 
-	private static ImageView leftArrow = new ImageView(arrow),
+	enum GridState
+	{
+		Artist,
+		Album,
+		Song
+	}
+	
+	private GridPane gridpane = new GridPane();
+	private Image arrow = new Image(JukeboxPi.class.getResource("resources/arrow.png").toExternalForm()); 
+	private ImageView leftArrow = new ImageView(arrow),
 			rightArrow = new ImageView(arrow);
-	private static Region spring = new Region();
+	private Region spring = new Region();
+	private GridState gridstate;
+	Button pageBack = new Button();
+	Button pageForward = new Button();
+	private JukeboxPi app;
 	
-	static Button pageBack = new Button();
-	static Button pageForward = new Button();
-	
-	private static HBox pageControls = new HBox(pageBack, spring, pageForward);
+	private HBox pageControls = new HBox(pageBack, spring, pageForward);
 	private int rows = 12,
 				cols;
+	int artistPage = 0;
 	
 	private List<ButtonBase> buttons;
 	public List<ButtonBase> getButtons() { return buttons; }
@@ -39,10 +48,15 @@ public class DisplayGrid extends VBox
 		this.cols = (int)cols;
 	}
 	
-	public DisplayGrid()
+	public DisplayGrid(JukeboxPi app)
 	{
-		super(5,gridpane,pageControls);
+		//super(5,gridpane,pageControls);
+		super(5);
+		this.getChildren().add(gridpane);
+		this.getChildren().add(pageControls);
+		
 		HBox.setHgrow(spring, Priority.ALWAYS);
+		this.app = app;
 	}
 	
 	
@@ -61,6 +75,11 @@ public class DisplayGrid extends VBox
 		int start = pageIndex * perPage;
 		int end = (start + perPage < size) ? start + perPage : size ;
 		
+		if (buttons.get(0).getClass() != null && buttons.get(0).getClass().toString() == "org.conterosoft.jukebox.ArtistButton")
+			{
+					artistPage = pageIndex;
+			}
+		
 		gridpane.getChildren().clear();
 		
 		int buttonIter = start;
@@ -75,7 +94,7 @@ public class DisplayGrid extends VBox
 				}
 				else
 				{
-					gridpane.add(new ArtistButton(null), col, row);
+					gridpane.add(new ArtistButton(app, null), col, row);
 				}
 				buttonIter++;
 			}	
