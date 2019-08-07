@@ -13,31 +13,32 @@ import javafx.scene.layout.Region;
 
 public class DisplayGrid extends VBox
 {
-	enum GridState
-	{
-		Artist,
-		Album,
-		Song
-	}
 	
 	private GridPane gridpane = new GridPane();
 	private Image arrow = new Image(JukeboxPi.class.getResource("resources/arrow.png").toExternalForm()); 
 	private ImageView leftArrow = new ImageView(arrow),
 			rightArrow = new ImageView(arrow);
 	private Region spring = new Region();
-	private GridState gridstate;
 	Button pageBack = new Button();
 	Button pageForward = new Button();
 	private JukeboxPi app;
 	
 	private HBox pageControls = new HBox(pageBack, spring, pageForward);
 	private int rows = 12,
-				cols;
-	int artistPage = 0;
+				cols,
+				artistPage = 0,
+				albumPage = 0;
 	
 	private List<ButtonBase> buttons;
+	private ButtonType buttonType;
+	/*
+	 * returns buttons containing objects (artist, album, song)
+	 */
 	public List<ButtonBase> getButtons() { return buttons; }
 	
+	/*
+	 * sets rows and columns for grid
+	 */
 	public void setRows(double rows)
 	{
 		this.rows = (int)rows;
@@ -48,9 +49,22 @@ public class DisplayGrid extends VBox
 		this.cols = (int)cols;
 	}
 	
+	/*
+	 * Clears page numbers, for resizing so we don;t go to a non existent page
+	 */
+	public void clearPages()
+	{
+		artistPage = 0;
+		albumPage = 0;
+	}
+	
+	/*
+	 * Accepts: reference to app
+	 * Constructor for Grid component
+	 * adds grid and page controls
+	 */
 	public DisplayGrid(JukeboxPi app)
 	{
-		//super(5,gridpane,pageControls);
 		super(5);
 		this.getChildren().add(gridpane);
 		this.getChildren().add(pageControls);
@@ -59,15 +73,49 @@ public class DisplayGrid extends VBox
 		this.app = app;
 	}
 	
-	
+	/*
+	 * Refills grid with current list - for size changes
+	 */
 	public void refill()
 	{
-		fill(buttons, 0);
+		fill(buttons, buttonType, 0);
 	}
 	
-	public void fill(List<ButtonBase> buttons, int pageIndex)
+	/*
+	 * Accepts list of buttons (artist, album, song)
+	 * and the type of button
+	 * calls other fill method and provides last page visited
+	 */
+	public void fill(List<ButtonBase> buttons, ButtonType buttonType)
+	{
+		int page;
+		
+		if (buttonType == ButtonType.ARTIST)
+		{
+			page = artistPage;
+		}
+		else if (buttonType == ButtonType.ALBUM)
+		{
+			page = albumPage;
+		}
+		else
+		{
+			page = 0; //shouldn't get here, but just in case
+		}
+		
+		fill(buttons, buttonType, page);
+	}
+	
+	/*
+	 * Accepts list of buttons (artist, album, or song),
+	 * the type of button in the list,
+	 * and a specific page number to display in the grid
+	 * Displays the buttons in the grid on the page specified
+	 */
+	public void fill(List<ButtonBase> buttons, ButtonType buttonType, int pageIndex)
 	{
 		this.buttons =  (List<ButtonBase>) buttons;
+		this.buttonType = buttonType;
 		int size = buttons.size();
 		
 		int perPage = rows * cols;
@@ -75,11 +123,16 @@ public class DisplayGrid extends VBox
 		int start = pageIndex * perPage;
 		int end = (start + perPage < size) ? start + perPage : size ;
 		
-		if (buttons.get(0).getClass() != null && buttons.get(0).getClass().toString() == "org.conterosoft.jukebox.ArtistButton")
-			{
-					artistPage = pageIndex;
-			}
-		
+		//set state of grid, i.e. type of buttons
+		if (buttonType == ButtonType.ARTIST)
+		{
+			artistPage = pageIndex;
+		}
+		else if (buttonType == ButtonType.ALBUM)
+		{
+			albumPage = pageIndex;
+		}
+	
 		gridpane.getChildren().clear();
 		
 		int buttonIter = start;
@@ -94,6 +147,7 @@ public class DisplayGrid extends VBox
 				}
 				else
 				{
+					//add empty buttons to fill space of partial page
 					gridpane.add(new ArtistButton(app, null), col, row);
 				}
 				buttonIter++;
@@ -117,11 +171,11 @@ public class DisplayGrid extends VBox
 		pageForward.getStyleClass().add("iconButton");
 		
 		pageBack.setOnAction(event -> {
-			this.fill(buttons,pageIndex - 1);
+			this.fill(buttons, this.buttonType, pageIndex - 1);
 		});
 		
 		pageForward.setOnAction(event -> {
-			this.fill(buttons,pageIndex + 1);
+			this.fill(buttons, this.buttonType,pageIndex + 1);
 		});
 		
 		if (pageIndex > 0)

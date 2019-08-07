@@ -30,13 +30,13 @@ public class AlbumButton extends ButtonBase
 					app.db.getSongs(this.album.getAlbumId()).stream().forEach(song -> { 
 						songs.add(new SongButton(app, song)); 
 					});
-					app.gridpane.fill(songs, 0);
+					app.gridpane.fill(songs, ButtonType.SONG, 0);
 					app.addAll.setVisible(true);
 					app.backButton.setOnAction(eventB -> {
-						app.gridpane.fill(app.albums, 0);
+						app.gridpane.fill(app.albums, ButtonType.ALBUM);
 						app.addAll.setVisible(false);
 						app.backButton.setOnAction(eventc -> {
-							app.refreshArtists();
+							app.refreshArtists(false);
 							app.backButton.setVisible(false);
 						});
 					});

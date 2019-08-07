@@ -96,7 +96,7 @@ public class JukeboxPi extends Application
 			adminStage.showAndWait();
 			this.makeLists();
 
-			refreshArtists();
+			refreshArtists(true);
 
 			addAll.setVisible(false);
 			backButton.setVisible(false);
@@ -117,7 +117,7 @@ public class JukeboxPi extends Application
 		HBox.setHgrow(filler, Priority.ALWAYS);
 
 		//initialize data
-		refreshArtists();
+		refreshArtists(true);
 		addAll.setVisible(false);
 		backButton.setVisible(false);
 
@@ -160,10 +160,13 @@ public class JukeboxPi extends Application
 				if (settingsObj.getShowPlaylist()) 
 				{ cols--; }
 				gridpane.setCols(cols);
+				gridpane.clearPages();
 				gridpane.refill();
 			}
 		}
-
+/*
+ * resizes grid when screen size changes
+ */
 		ChangeListener<Number> stageSizeListener = (observable, oldValue, newValue) ->
 		{
 			int fill = 145;
@@ -185,6 +188,7 @@ public class JukeboxPi extends Application
 			if (settingsObj.getShowPlaylist()) 
 			{ cols--; }
 			gridpane.setCols(cols);
+			gridpane.clearPages();
 			gridpane.refill();
 		};
 
@@ -198,7 +202,12 @@ public class JukeboxPi extends Application
 		mainStage.setFullScreen(true);
 		mainStage.show();
 	}
-	public void refreshArtists()
+	
+	/*
+	 * accepts a boolean to start over at page 0
+	 * gets artists from db and fills grid with buttons
+	 */
+	public void refreshArtists(boolean reset)
 	{
 		try
 		{			
@@ -207,25 +216,14 @@ public class JukeboxPi extends Application
 			db.getArtists().stream().forEach(a -> {
 				artistButtonList.add(new ArtistButton(this, a));
 			});
-			gridpane.fill(artistButtonList,0);
-
-		}
-		catch (Exception e)
-		{
-			e.printStackTrace();
-		}
-	}
-	
-	public void refreshArtists(int page)
-	{
-		try
-		{			
-			List<ButtonBase> artistButtonList = new ArrayList<ButtonBase>();
-
-			this.db.getArtists().stream().forEach(a -> {
-				artistButtonList.add(new ArtistButton(this, a));
-			});
-			gridpane.fill(artistButtonList,page);
+			if (reset)
+			{
+				gridpane.fill(artistButtonList,ButtonType.ARTIST,0);
+			}
+			else
+			{
+				gridpane.fill(artistButtonList, ButtonType.ARTIST);
+			}
 
 		}
 		catch (Exception e)
@@ -234,6 +232,9 @@ public class JukeboxPi extends Application
 		}
 	}
 
+/*
+ * shows or hides playlist based on settings
+ */
 	public void makeLists()
 	{
 		if (settingsObj.getShowPlaylist() && !lists.getChildren().contains(playListView))

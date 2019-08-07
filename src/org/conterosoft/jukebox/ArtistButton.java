@@ -29,15 +29,13 @@ public class ArtistButton extends ButtonBase
 				try {
 					List<ButtonBase> albums = new ArrayList<ButtonBase>();
 					
-					
-					
 					app.db.getAlbums(this.artist.getArtistId()).stream().forEach(a -> albums.add(new AlbumButton(app, a)));
 					
-					app.gridpane.fill(albums,0);
+					app.gridpane.fill(albums, ButtonType.ALBUM, 0);
 					app.albums = albums;
 					
 					app.backButton.setOnAction(eventB -> {
-						app.refreshArtists(app.gridpane.artistPage);
+						app.refreshArtists(false);
 						app.backButton.setVisible(false);
 					});
 					app.backButton.setVisible(true);
