@@ -110,7 +110,10 @@ public class DbController
 		return albums;
 	}
 	
-	
+	/**
+	 * accepts albumid
+	 * returns list of song objects
+	 */
 	public List<Song> getSongs(int albumId) throws SQLException
 	{
 		PreparedStatement pstmt = db.prepareStatement("Select song_name, song_location, track_no from songs where album_id = ? order by track_no");
@@ -176,7 +179,10 @@ public class DbController
 		}
 	}
 	
-	//recursive search method to scan drive
+	/*
+	 * accepts folder
+	 * recursive search method to scan drive
+	 */
 	private void folderscan(File baseFolder) throws SQLException, IOException
 	{
 		File[] files = baseFolder.listFiles();
@@ -187,8 +193,15 @@ public class DbController
 			{ 
 				folderscan(file); 
 			}
-			else if (file.isFile()) { processFile(file); }
-			else System.out.println("sup with " + file + "?");
+			else if (file.isFile()) 
+			{ 
+				processFile(file); 
+			}
+			else 
+			{
+				//shouldn't ever get here
+				System.out.println("sup with " + file + "?");
+			}
 		}
 	}
 	

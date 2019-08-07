@@ -9,8 +9,6 @@ public class ArtistButton extends ButtonBase
 {
 
 	private Artist artist;
-	@SuppressWarnings("unused")
-	private JukeboxPi app;
 	
 	@Override
 	public Artist getObject() { return artist; }
@@ -21,7 +19,6 @@ public class ArtistButton extends ButtonBase
 
 		this.artist = artist;
 		this.setPrefSize(250,25);
-		this.app = app;
 
 		if (artist != null)
 		{

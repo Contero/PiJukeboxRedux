@@ -6,8 +6,6 @@ import java.util.ArrayList;
 public class AlbumButton extends ButtonBase
 {
 	private Album album;
-	@SuppressWarnings("unused")
-	private JukeboxPi app;
 	
 	@SuppressWarnings("unchecked")
 	@Override
@@ -19,7 +17,6 @@ public class AlbumButton extends ButtonBase
 
 		this.album = album;
 		this.setPrefSize(250,20);
-		this.app = app;
 
 		if (album != null)
 		{
