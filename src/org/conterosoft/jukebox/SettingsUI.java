@@ -2,6 +2,7 @@ package org.conterosoft.jukebox;
 
 import java.io.File;
 
+import org.conterosoft.Chooser.FolderChooser;
 import javafx.application.Platform;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
@@ -11,7 +12,6 @@ import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
-import javafx.stage.DirectoryChooser;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
@@ -57,15 +57,19 @@ public class SettingsUI extends Stage
 
 		root.textProperty().addListener((obs,old,newt) ->{ dirty = true; });
 
-		DirectoryChooser folderBrowser = new DirectoryChooser();
+		FolderChooser folderBrowser = new FolderChooser();
 		folderBrowser.setTitle("Root Music Directory");
+		
 		browse.setOnAction(event -> {
 
-			File rootFolder = folderBrowser.showDialog(null);
-			if(rootFolder != null)
+			if (!folderBrowser.isShowing())
 			{
-				root.setText(rootFolder.toString());
-			};
+				File rootFolder = folderBrowser.showDialog(this);
+				if(rootFolder != null)
+				{
+					root.setText(rootFolder.toString());
+				};
+			}
 		});
 
 		exit.setOnAction(event -> {
